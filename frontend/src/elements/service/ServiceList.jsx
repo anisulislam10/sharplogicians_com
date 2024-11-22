@@ -76,7 +76,7 @@ const ServiceThree = ({ column, item }) => {
               <div className="service service__style--2">
                 {/* Display the service image */}
                 <div className="icon">
-                  <img src={service.image} alt={service.title} style={{ width: "600px" }} />
+                  <img src={service.image} alt={service.title} style={{ width: "320px", height:"320px" }} />
                 </div>
                 <div className="content">
                   <h3 className="title">{service.title}</h3>
