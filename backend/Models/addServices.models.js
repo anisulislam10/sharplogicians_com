@@ -1,4 +1,5 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+
 const serviceSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -9,16 +10,31 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  image: { 
+  processOfMetal : {
     type: String, 
-    required: false
-},
+    required: false,
+    default: "" 
+  },
+  ourWorkingProcess : {
+    type: String, 
+    required: false,
+    default: "" 
+  },
+  content : {
+    type: String, 
+    required: false,
+    default: "" 
+  },
 
+  image: [{ 
+    type: String, 
+    required: false 
+  }],
   createdAt: {
     type: Date,
     default: Date.now
   }
-})
+});
 
-const Services = mongoose.model('Services', serviceSchema)
-export default Services
+const Services = mongoose.model('Services', serviceSchema);
+export default Services;

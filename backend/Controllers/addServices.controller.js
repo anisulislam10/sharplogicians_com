@@ -4,61 +4,71 @@ import mongoose from 'mongoose';
 
 //add new service
 export const addService = async (req, res) => {
-  const { title, shortDescription } = req.body;
+  const { title, shortDescription, processOfMetal,ourWorkingProcess,content } = req.body;
+
   const image = req.file ? req.file.path : ""; 
- 
-  // if (!title || !shortDescription || !image) {
+
+
+  // Validate input fields
+  // if (!title || !shortDescription || !processOfMetal || !ourWorkingProcess || !content || !image) {
   //   return res.status(400).json({
   //     status: false,
-  //     message: 'All fields (title, shortDescription, image) are required',
+  //     message: "All fields are required",
   //   });
   // }
 
   if (title.length < 3) {
     return res.status(400).json({
       status: false,
-      message: 'Title must be at least 3 characters long',
+      message: "Title must be at least 3 characters long",
     });
   }
 
   if (shortDescription.length < 10) {
     return res.status(400).json({
       status: false,
-      message: 'Short Description must be at least 10 characters long',
+      message: "Short Description must be at least 10 characters long",
     });
   }
 
   try {
-    const existingService = await Services.findOne({ title: title });
+    const existingService = await Services.findOne({ title });
     if (existingService) {
       return res.status(400).json({
         status: false,
-        message: 'Service with this title already exists',
+        message: "Service with this title already exists",
       });
     }
 
     const newService = new Services({
       title,
       shortDescription,
-      image: `http://localhost:${process.env.PORT}/${image}`
+      processOfMetal,
+      ourWorkingProcess,
+      content,
+      image: [
+        `http://localhost:${process.env.PORT}/${image}`,
+        
+      ],
     });
 
     await newService.save();
 
     return res.status(200).json({
       status: true,
-      message: 'New Service Added Successfully',
-      data: newService,  
+      message: "New Service Added Successfully",
+      data: newService,
     });
   } catch (error) {
-    console.error('Error adding service:', error);
+    console.error("Error adding service:", error);
     return res.status(500).json({
       status: false,
-      message: 'Internal Server Error',
-      error: error.message,  
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
+
 
 //get All-Services
 export const getAllServices = async (req, res) => {
@@ -144,7 +154,7 @@ export const getServiceById = async(req,res)=>{
 //update servie
 export const updateService = async (req, res) => {
     const { id } = req.params;
-    const { title, shortDescription } = req.body;
+    const { title, shortDescription,processOfMetal,ourWorkingProcess,content } = req.body;
     const image = req.file ? req.file.filename : null;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -165,6 +175,12 @@ export const updateService = async (req, res) => {
 
         if (title) service.title = title;
         if (shortDescription) service.shortDescription = shortDescription;
+        if (processOfMetal) service.processOfMetal = processOfMetal;
+        if (ourWorkingProcess) service.ourWorkingProcess = ourWorkingProcess;
+        if (content) service.content = content;
+
+
+
         if (image) service.image = `http://localhost:${process.env.PORT}/uploads/${image}`;
 
         await service.save();

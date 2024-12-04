@@ -5,6 +5,15 @@ import AdminRoute from './Routes/admin.routes.js';
 import servicesRoutes from './Routes/addServices.routes.js';
 import portfolioRoutes from './Routes/addPortfolio.routes.js';
 import ourClientsRoutes from './Routes/ourClients.routes.js';
+import aboutUSRoutes from './Routes/aboutUs.routes.js'
+import teamsRoutes from './Routes/teams.routes.js'
+import testimonialRoutes from './Routes/testimonial.routes.js'
+import contactRoutes from './Routes/contactus.routes.js'
+import blogRoutes from "./Routes/blog.routes.js"
+import quoteRoutes from './Routes/quote.routes.js'
+import QuoteServiceRoutes from "./Routes/quoteService.routes.js";
+
+
 import cookieParser from 'cookie-parser';
 import cors from "cors"; 
 import path from 'path'; 
@@ -41,6 +50,18 @@ app.use("/api/admin/auth", AdminRoute);
 app.use("/api/admin/services", servicesRoutes);
 app.use("/api/admin/portfolio", portfolioRoutes);
 app.use("/api/admin/client", ourClientsRoutes);
+app.use("/api/admin/about",aboutUSRoutes);
+app.use("/api/admin/team",teamsRoutes);
+app.use("/api/admin/testimonial",testimonialRoutes);
+app.use("/api/admin/contact",contactRoutes);
+app.use("/api/admin/blogs",blogRoutes)
+app.use("/api/admin/quote",quoteRoutes)
+app.use("/api/admin/quote_service",QuoteServiceRoutes)
+
+
+
+
+
 
 const PORT = process.env.PORT || 4000;
 

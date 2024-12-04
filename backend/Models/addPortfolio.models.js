@@ -11,11 +11,31 @@ const portfolioSchems= new mongoose.Schema({
         type:String,
         require:true
     },
+    
+
     type:{
         type:String,
         required:true,
-        enum:["Magento", "Wordpress", "Drupal", "All"]
-    }
+        enum:["Magento", "Wordpress", "Drupal"]
+    },
+
+    content: { type: String, required: true },
+
+
+
+    projectType:{
+        type:String,
+        enum:["mobile", "web","desktop"]
+    },
+
+    branchType:{
+        type:String,
+    },
+    program:{
+        type:String,
+    },
+    
+
 })
 const Portfolio = mongoose.model('Portfolio', portfolioSchems)
 export default Portfolio

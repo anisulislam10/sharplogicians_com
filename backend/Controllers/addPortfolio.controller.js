@@ -2,8 +2,10 @@ import Portfolio from '../Models/addPortfolio.models.js'
 import mongoose from 'mongoose'
 //add new portfolio 
 export const addPortfolio = async (req, res) => {
-  const { title, type } = req.body;
+  const { title, type,content,projectType,branchType,program } = req.body;
   const image = req.file ? req.file.path : "";
+  // const video = req.files?.video ? req.files.video[0].path : "";
+
 
   // if (!title || !image || !type) {
   //   return res.status(400).json({
@@ -12,18 +14,34 @@ export const addPortfolio = async (req, res) => {
   //   });
   // }
 
-  if (!["Magento", "Wordpress", "Drupal", "All"].includes(type)) {
+  if (!["Magento", "Wordpress", "Drupal"].includes(type)) {
     return res.status(400).json({
       status: false,
       message: "Invalid type. Allowed types are Magento, Wordpress, Drupal, and All.",
     });
   }
 
+
+
+
+  if (!["mobile", "web", "desktop"].includes(projectType)) {
+    return res.status(400).json({
+      status: false,
+      message: "Invalid type. Allowed types are web, mobile, desktop.",
+    });
+  }
+
   try {
     const portfolio = new Portfolio({
       title,
-      image: `http://localhost:${process.env.PORT}/${image}`, 
+      image: `http://localhost:${process.env.PORT}/${image}`,
+      // video: video ? `http://localhost:${process.env.PORT}/${video}` : "",
+ 
       type,
+      content,
+      projectType,
+      branchType,
+      program
     });
 
     await portfolio.save();
@@ -83,12 +101,12 @@ export const getPortfolioById=async(req,res)=>{
   const {id}=req.params
 
          // Validate if the ID is a valid MongoDB ObjectId
-          if(!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({
-              status: false,
-              message: "Invalid Portfolio ID format",
-          });
-          }
+          // if(!mongoose.Types.ObjectId.isValid(id)){
+          //   return res.status(400).json({
+          //     status: false,
+          //     message: "Invalid Portfolio ID format",
+          // });
+          // }
 
   try {
 
@@ -115,8 +133,10 @@ export const getPortfolioById=async(req,res)=>{
 //update portfolio items
 export const updatePortfolioItems = async (req, res) => {
   const { id } = req.params;
-  const { title, type } = req.body;
+  const { title, type,content,projectType,branchType,program, } = req.body;
     const image = req.file ? req.file.path : null;
+  // const video = req.files?.video ? req.files.video[0].path : "";
+
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
@@ -125,20 +145,24 @@ export const updatePortfolioItems = async (req, res) => {
     });
   }
 
-    if (!title && !image && !type) {
-      return res.status(400).json({
-        status: false,
-        message: "At least one field (title, image, type) is required to update",
-      });
-    }
 
-    if (type && !["Magento", "Wordpress", "Drupal", "All"].includes(type)) {
+
+    if (type && !["Magento", "Wordpress", "Drupal"].includes(type)) {
       return res.status(400).json({
         status: false,
         message:
-          "Invalid type. Allowed types are Magento, Wordpress, Drupal, and All.",
+          "Invalid type. Allowed types are Magento, Wordpress, Drupal.",
       });
     }
+
+
+
+    // if (projectType && !["mobile", "web", "desktop"].includes(projectType)) {
+    //   return res.status(400).json({
+    //     status: false,
+    //     message: "Invalid type. Allowed types are web, mobile, desktop.",
+    //   });
+    // }
 
     try {
       const portfolio = await Portfolio.findById(id);
@@ -150,6 +174,14 @@ export const updatePortfolioItems = async (req, res) => {
       }
 
       if (title) portfolio.title = title;
+      if (branchType) portfolio.branchType = branchType;
+      if (program) portfolio.program = program;
+      if (projectType) portfolio.projectType = projectType;
+      if (content) portfolio.content = content;
+
+    //   if (video){
+    //     portfolio.video = `http://localhost:${process.env.PORT}/${video}`;
+    //  }
       if (image){
          portfolio.image = `http://localhost:${process.env.PORT}/${image}`;
       }
@@ -203,4 +235,59 @@ export const deletePortfolioItems=async(req,res)=>{
         message:"Internal Server Error"
     })
   }
+}
+
+
+
+
+// Random Portfolio API
+export const getRandomPortfolio = async (req, res) => {
+  try {
+    // Fetch all portfolios from the database
+    const portfolios = await Portfolio.find();
+
+    if (!portfolios || portfolios.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No portfolios available",
+      });
+    }
+
+    // Shuffle the portfolios array using Fisher-Yates algorithm
+    const shuffledPortfolios = shuffleArray(portfolios);
+
+    // Select the first two portfolios from the shuffled array
+    const randomPortfolios = shuffledPortfolios.slice(0, 2);
+
+    console.log("Random portfolios fetched:", randomPortfolios);
+
+    return res.status(200).json({
+      status: true,
+      message: "Random portfolios fetched successfully",
+      data: randomPortfolios,
+    });
+  } catch (error) {
+    console.error("Error fetching random portfolios:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Internalllll Server Error",
+    });
+  }
+};
+
+// Fisher-Yates (Durstenfeld) Shuffle Algorithm
+function shuffleArray(array) {
+  let currentIndex = array.length, randomIndex;
+
+  // While there are remaining elements to shuffle
+  while (currentIndex !== 0) {
+    // Pick a remaining element
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // Swap it with the current element
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }

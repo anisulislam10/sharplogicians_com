@@ -1,35 +1,41 @@
 import multer from "multer";
 import path from "path";
 
-// Configure Multer storage
+// Set up storage configuration for Multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Directory where images will be saved
+  destination: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, "uploads/"); // Save images in 'uploads/images/'
+    } else if (file.mimetype.startsWith("video/")) {
+      cb(null, "uploads/videos/"); // Save videos in 'uploads/videos/'
+    } else {
+      cb(new Error("Invalid file type"), null); // Reject unsupported files
+    }
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename with extension
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // E.g., 1631820513456.jpg or .mp4
   },
 });
 
-// File filter to accept only images
+// File filter: only allow images and videos
 const fileFilter = (req, file, cb) => {
-  const fileTypes = /jpeg|jpg|png/;
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimeType = fileTypes.test(file.mimetype);
+  const allowedFileTypes = /jpeg|jpg|png|gif|svg|mp4|mov|avi|mkv/; // Add video formats here
+  const extname = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedFileTypes.test(file.mimetype);
 
-  if (extName && mimeType) {
-    cb(null, true);
+  if (extname && mimetype) {
+    return cb(null, true); // Accept the file
   } else {
-    cb(new Error("Only images (jpeg, jpg, png) are allowed"), false);
+    return cb(new Error("Only image and video files are allowed!"), false); // Reject the file
   }
 };
 
-// Multer upload instance
+// Set up the Multer upload middleware
 const upload = multer({
   storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // Max file size: 50MB (adjust as needed)
   fileFilter: fileFilter,
-  limits: { fileSize: 1024 * 1024 * 2 }, // 2MB size limit
 });
 
+// Export the middleware for use in routes
 export default upload;

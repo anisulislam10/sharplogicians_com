@@ -1,30 +1,43 @@
-import express from 'express'
+import express from 'express';
+import upload from '../Middleware/multer.middleware.js';
+
 import { 
     addPortfolio, 
     deletePortfolioItems, 
     getAllPortfolioItems, 
     getPortfolioById, 
+    getRandomPortfolio, 
     updatePortfolioItems 
 } from '../Controllers/addPortfolio.controller.js';
-import { verifyAdminToken } from '../Middleware/verifyToken.middleware.js';
-import upload from '../Middleware/multer.middleware.js';
-const router=express.Router();
 
-// Add portfolio Route (with Multer middleware for file upload)
+import { verifyAdminToken } from '../Middleware/verifyToken.middleware.js';
+
+const router = express.Router();
+
+// Add portfolio Route (with Multer middleware for image and video upload)
 router.route("/post").post(
     upload.single("image"),
+
     addPortfolio
 );
 
+// Get all portfolio items
+router.route("/get").get(getAllPortfolioItems);
 
-router.route("/get").get(getAllPortfolioItems)
-router.route("/:id").get(getPortfolioById)
+// Get a single portfolio item by ID
+router.route("/:id").get(getPortfolioById);
 
+// Update portfolio item (with image and video upload support)
 router.route("/update/:id").put(
-    upload.single('image'),
-    updatePortfolioItems)
+    upload.single("image"),
 
-router.route("/delete/:id").delete(deletePortfolioItems)
+    updatePortfolioItems
+);
+
+// Delete portfolio item
+router.route("/delete/:id").delete(deletePortfolioItems);
+router.route("/randFn").get(getRandomPortfolio)
 
 
-export default router
+
+export default router;
