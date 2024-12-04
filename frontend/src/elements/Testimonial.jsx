@@ -1,220 +1,167 @@
-import React, { Component } from "react";
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// // import "./../home/testimonial.css";
+
+// const Testimonial = () => {
+//   const [testimonials, setTestimonials] = useState([]);
+
+//   useEffect(() => {
+//     const fetchTestimonials = async () => {
+//       try {
+//         const response = await axios.get(
+//           "http://localhost:3000/api/admin/testimonial/get"
+//         );
+//         setTestimonials(response.data.testimonial);
+//       } catch (error) {
+//         console.error("Error fetching testimonials:", error);
+//       }
+//     };
+//     fetchTestimonials();
+//   }, []);
+
+//   return (
+//     <div className="testimonial-container">
+//       <h2 className="testimonial-heading">What Our Clients Says</h2>
+//       <div className="testimonial-slider">
+//         {testimonials.map((item, index) => (
+//           <div className="testimonial-card" key={index}>
+//             <div className="testimonial-logo">
+//               <img src={item.image} alt={item.companyName} />
+//             </div>
+//             <h3 className="company-name">{item.companyName}</h3>
+//             <p className="testimonial-comment">"{item.comment}"</p>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Testimonial;
+
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+// import './../assets/scss/elements/_testimonial'
+// import "./../index.scss";  
+import './../assets/scss/elements/_testimonial.scss'
 
-import testimonialImg1 from "../assets/images/client/testimonial-1.jpg";
-import testimonialImg2 from "../assets/images/client/testimonial-2.jpg";
-import testimonialImg3 from "../assets/images/client/testimonial-3.jpg";
-import testimonialImg4 from "../assets/images/client/testimonial-4.jpg";
-import testimonialImg5 from "../assets/images/client/testimonial-5.jpg";
-import testimonialImg6 from "../assets/images/client/testimonial-6.jpg";
-import testimonialImg7 from "../assets/images/client/testimonial-7.jpg";
-import testimonialImg8 from "../assets/images/client/testimonial-8.jpg";
+const Testimonial = () => {
+  const [testimonials, setTestimonials] = useState([]); // Array to store testimonials
+  const [selectedTestimonialId, setSelectedTestimonialId] = useState(null); // ID of the selected testimonial
+  const [selectedTestimonial, setSelectedTestimonial] = useState(null); // Selected testimonial details
+  const [error, setError] = useState(null);
 
-class Testimonial extends Component {
-  render() {
-    return (
-      <React.Fragment>
-        <div className="row">
-          <div className="col-lg-12">
-            <Tabs>
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Aklima The standard chunk of Lorem Ipsum used since the
-                      1500s is reproduced below for those interested. Sections
-                      Bonorum et Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Aklima </span> - COO, AMERIMAR ENTERPRISES, INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
+  // Fetch all testimonials initially
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL_TESTIMONIAL_GET}`
+        );
+        setTestimonials(response.data.testimonial); // Assuming `testimonial` contains an array
+        if (response.data.testimonial.length > 0) {
+          setSelectedTestimonialId(response.data.testimonial[0]._id); // Set first testimonial ID by default
+        }
+      } catch (err) {
+        console.error("Error fetching testimonials:", err);
+        setError("Unable to fetch testimonials.");
+      }
+    };
 
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Fatima Asrafy standard chunk of Lorem Ipsum used since the
-                      1500s is reproduced below for those interested. Sections
-                      Bonorum et Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Fatima Asrafy </span> - COO, AMERIMAR ENTERPRISES,
-                      INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Jannat Tumpa The standard chunk of Lorem Ipsum used since
-                      the 1500s is reproduced below for those interested.
-                      Sections Bonorum et Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Jannat Tumpa </span> - COO, AMERIMAR ENTERPRISES,
-                      INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
+    fetchTestimonials();
+  }, []);
 
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Standard chunk of Lorem Ipsum used since the 1500s is
-                      reproduced below for those interested. Sections Bonorum et
-                      Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Johns Due </span> - COO, AMERIMAR ENTERPRISES, INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      John Doe The standard chunk of Lorem Ipsum used since the
-                      1500s is reproduced below for those interested. Sections
-                      Bonorum et Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>John Doe </span> - COO, AMERIMAR ENTERPRISES, INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
+  // Fetch selected testimonial by ID
+  useEffect(() => {
+    const fetchTestimonialById = async () => {
+      if (!selectedTestimonialId) return;
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL_TESTIMONIAL}/${selectedTestimonialId}`
+        );
+        setSelectedTestimonial(response.data.testimonial); // Assuming `testimonial` is returned
+      } catch (err) {
+        console.error("Error fetching testimonial by ID:", err);
+        setError("Unable to fetch selected testimonial.");
+      }
+    };
 
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Chunk of Lorem Ipsum used since the 1500s is reproduced
-                      below for those interested. Sections Bonorum et Malorum
-                      original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Amar Orthi </span> - COO, AMERIMAR ENTERPRISES, INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      The standard chunk of Lorem Ipsum used since the 1500s is
-                      reproduced below for those interested. Sections Bonorum et
-                      Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>Fatima Ma </span> - COO, AMERIMAR ENTERPRISES, INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
+    fetchTestimonialById();
+  }, [selectedTestimonialId]);
 
-              <TabPanel>
-                <div className="rn-testimonial-content text-center">
-                  <div className="inner">
-                    <p>
-                      Lorem Ipsum used since the 1500s is reproduced below for
-                      those interested. Sections Bonorum et Malorum original.
-                    </p>
-                  </div>
-                  <div className="author-info">
-                    <h6>
-                      <span>JON CUMMINS </span> - COO, AMERIMAR ENTERPRISES,
-                      INC.
-                    </h6>
-                  </div>
-                </div>
-              </TabPanel>
+  // Handle image click to set selected testimonial ID
+  const handleImageClick = (id) => {
+    setSelectedTestimonialId(id);
+  };
 
-              <TabList className="testimonial-thumb-wrapper">
-                <Tab>
-                  <div className="testimonial-thumbnai">
+  return (
+    <React.Fragment>
+      <div className="row">
+        <div className="col-lg-12">
+          <Tabs>
+
+
+             {/* Testimonial Details */}
+             {testimonials.map((testimonial) => (
+              <TabPanel key={testimonial._id}>
+                {selectedTestimonial &&
+                selectedTestimonialId === testimonial._id ? ( // Match by ID
+                  <div className="rn-testimonial-content text-center">
+                    <div className="inner">
+                      <p>
+                        {selectedTestimonial.comment ||
+                          "No comment available for this testimonial."}
+                      </p>
+                    </div>
+                    <div className="author-info">
+                    
+                   
+                    {/* <h6 style={{fontWeight:'lighter', fontSize:'19px',textTransform: 'uppercase'
+ }}>
+                      </h6 > */}
+                      
+                      <h6 >
+                      { <span>{selectedTestimonial.personName}</span>  }{" - "}
+
+                        {selectedTestimonial.companyName }{" "}
+                      </h6>
+                    </div>
+                  </div>
+                ) : (
+                  <p></p>
+                )}
+              </TabPanel>
+            ))}
+            {/* Thumbnails */}
+            <TabList className="testimonial-thumb-wrapper">
+              {testimonials.map((testimonial) => (
+                <Tab key={testimonial._id}>
+                  <div className="testimonial-thumbnail">
                     <div className="thumb">
-                      <img src={testimonialImg1} alt="Testimonial Images" />
+                      {testimonial.image ? (
+                        <img
+                          src={testimonial.image}
+                          alt={`${testimonial.companyName} Image`}
+                          onClick={() => handleImageClick(testimonial._id)} // Set selected testimonial ID
+                        />
+                      ) : (
+                        <p>No image available</p>
+                      )}
                     </div>
                   </div>
                 </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg2} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg3} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg4} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg5} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg6} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg7} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-                <Tab>
-                  <div className="testimonial-thumbnai">
-                    <div className="thumb">
-                      <img src={testimonialImg8} alt="Testimonial Images" />
-                    </div>
-                  </div>
-                </Tab>
-              </TabList>
-            </Tabs>
-          </div>
+              ))}
+            </TabList>
+
+           
+          </Tabs>
+
         </div>
-      </React.Fragment>
-    );
-  }
-}
+      </div>
+    </React.Fragment>
+  );
+};
+
 export default Testimonial;

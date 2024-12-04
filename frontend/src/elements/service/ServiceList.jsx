@@ -1,50 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BsAndroid, BsApple, BsWordpress } from "react-icons/bs";
-import { DiMagento } from "react-icons/di";
-import { RiSeoFill } from "react-icons/ri";
-import { SiOdoo } from "react-icons/si";
-import { FiMonitor } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 
 
-const ServiceList = [
-  {
-    icon: <BsWordpress />,
-    title: "Wordpress Development",
-    description: "Corporate, Business, Agency",
-  },
-  {
-    icon: <SiOdoo />,
-    title: "ODOO Development",
-    description: "Complete Solution.",
-  },
-  {
-    icon: <DiMagento />,
-    title: "Magento Development",
-    description: "E-Commerce, Retail, Electronics, Fashion.",
-  },
-  {
-    icon: <BsAndroid />,
-    title: "Mobile App Development",
-    description: "Android Mobile Application.",
-  },
-  {
-    icon: <BsApple />,
-    title: "IOS Development",
-    description: "IOS Mobile Application.",
-  },
-  {
-    icon: <RiSeoFill />,
-    title: "Search Engine Optimization",
-    description: "On/Off Page SEO Landing Page",
-  },
-  {
-    icon: <FiMonitor />,
-    title: "Digital Marketing",
-    description: "Digital Marketing, Events, Social Media, Tickets",
-  },
-];
 /*****************************************
 dynamically Show Services on Service Page
 *****************************************/
@@ -55,8 +14,9 @@ const ServiceThree = ({ column, item }) => {
       const fetchServices = async () => {
         try {
           const response = await axios.get(import.meta.env.VITE_API_API_GET_SERVICES);
-        //   console.log(response.data.services);
+          // console.log(response.data.services);
           setServicesData(response.data.services);
+
         } catch (error) {
           console.error("Error fetching services data:", error);
         }
@@ -70,23 +30,35 @@ const ServiceThree = ({ column, item }) => {
   
     return (
       <div className="row">
-        {ServiceContent.map((service, i) => (
-          <div className={`${column}`} key={i}>
-            <a href="/service-details">
-              <div className="service service__style--2">
-                {/* Display the service image */}
-                <div className="icon">
-                  <img src={service.image} alt={service.title} style={{ width: "320px", height:"320px" }} />
-                </div>
-                <div className="content">
-                  <h3 className="title">{service.title}</h3>
-                  <p>{service.shortDescription}</p>
-                </div>
+      {ServiceContent.map((service, i) => (
+        <div className={`col-lg-4 col-md-4 col-sm-4 col-12 ${column}`} key={i}>
+          <Link to={`/service-details/${service._id}`}>
+            <div className="service service__style--2" style={{ width: '100%', height: 'auto' }}>
+              {/* Display the service image */}
+              <div className="icon" style={{ marginBottom: '10px', marginLeft:'14px' }}> {/* Adjust margin to reduce space */}
+                <img 
+                  className="icon" 
+                  src={service.image} 
+                  alt={service.title} 
+                  style={{ width: "50px", height: "50px"   }} 
+                />
               </div>
-            </a>
-          </div>
-        ))}
-      </div>
+              <div className="content">
+                <h3 className="title" style={{ marginBottom: '10px' }}>{service.title}</h3> {/* Adjust margin to reduce space */}
+                <p style={{ textAlign: 'left', padding: '10px 0' }}>
+                  {service.shortDescription.length > 20
+                    ? `${service.shortDescription.slice(0, 83)}` // Added ellipsis for trimmed text
+                    : service.shortDescription}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+    </div>
+    
+    
+
     );
   };
   

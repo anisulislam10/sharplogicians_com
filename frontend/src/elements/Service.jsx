@@ -5,42 +5,63 @@ import { FiCast , FiLayers , FiUsers , FiMonitor ,FiChevronUp } from "react-icon
 import ScrollToTop from 'react-scroll-up';
 import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 
-const ServiceList = [
-    {
-        icon: <FiCast />,
-        title: 'Business Stratagy',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-    {
-        icon: <FiLayers />,
-        title: 'Website Development',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-    {
-        icon: <FiUsers />,
-        title: 'Marketing & Reporting',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-    {
-        icon: <FiMonitor />,
-        title: 'Mobile App Development',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-    {
-        icon: <FiCast />,
-        title: 'Website Development',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-    {
-        icon: <FiMonitor />,
-        title: 'Marketing & Reporting',
-        description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
-    },
-]
-class Service extends Component{
-    render(){
+// const ServiceList = [
+//     {
+//         icon: <FiCast />,
+//         title: 'Business Stratagy',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+//     {
+//         icon: <FiLayers />,
+//         title: 'Website Development',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+//     {
+//         icon: <FiUsers />,
+//         title: 'Marketing & Reporting',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+//     {
+//         icon: <FiMonitor />,
+//         title: 'Mobile App Development',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+//     {
+//         icon: <FiCast />,
+//         title: 'Website Development',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+//     {
+//         icon: <FiMonitor />,
+//         title: 'Marketing & Reporting',
+//         description: 'I throw myself down among the tall grass by the stream as I lie close to the earth.'
+//     },
+// ]
+const Service =({ column, item })=>{
+    const [servicesData, setServicesData] = useState([]);
+  
+    useEffect(() => {
+      const fetchServices = async () => {
+        try {
+          const response = await axios.get(import.meta.env.VITE_API_API_GET_SERVICES);
+          // console.log(response.data.services);
+          setServicesData(response.data.services);
+
+        } catch (error) {
+          console.error("Error fetching services data:", error);
+        }
+      };
+  
+      fetchServices();
+    }, []);
+    const ServiceContent = servicesData.slice(0, item);
+
+    // render(){
         return(
             <React.Fragment>
                 <PageHelmet pageTitle='Service' />
@@ -51,132 +72,39 @@ class Service extends Component{
                 {/* End Breadcrump Area */}
 
                 {/* Start Service Area */}
-                <div className="service-area ptb--120 bg_color--5">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="section-title text-center mb--30">
-                                    <h2>Digital Marketing</h2>
-                                    <p>There are many variations of passages of Lorem Ipsum available, <br /> but the majority have suffered alteration.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row service-one-wrapper">
-                            {ServiceList.map( (val , i) => (
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12" key={i}>
-                                    <a href="/service-details">
-                                        <div className="service service__style--2">
-                                            <div className="icon">
-                                                {val.icon}
-                                            </div>
-                                            <div className="content">
-                                                <h3 className="title">{val.title}</h3>
-                                                <p>{val.description}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                <div className="row"  style={{margin:'100px'}}>
+      {ServiceContent.map((service, i) => (
+        <div className={`col-lg-4 col-md-4 col-sm-4 col-12 ${column}`} key={i}>
+          <Link to={`/service-details/${service._id}`}>
+            <div className="service service__style--2" style={{ width: '100%', height: 'auto' }}>
+              {/* Display the service image */}
+              <div className="icon" style={{ marginBottom: '10px', marginLeft:'14px' }}> {/* Adjust margin to reduce space */}
+                <img 
+                  className="icon" 
+                  src={service.image} 
+                  alt={service.title} 
+                  style={{ width: "50px", height: "50px"   }} 
+                />
+              </div>
+              <div className="content">
+                <h3 className="title" style={{ marginBottom: '10px' }}>{service.title}</h3> {/* Adjust margin to reduce space */}
+                <p style={{ textAlign: 'left', padding: '10px 0' }}>
+                  {service.shortDescription.length > 20
+                    ? `${service.shortDescription.slice(0, 83)}` // Added ellipsis for trimmed text
+                    : service.shortDescription}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+    </div>
+    
                 {/* End Service Area */}
 
-                {/* Start Service Area */}
-                <div className="service-area ptb--120 bg_color--1">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="section-title text-center mb--30">
-                                    <h2>Strategy</h2>
-                                    <p>There are many variations of passages of Lorem Ipsum available, <br /> but the majority have suffered alteration.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row service-one-wrapper">
-                            {ServiceList.map( (val , i) => (
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12" key={i}>
-                                    <a className="text-center" href="/service-details">
-                                        <div className="service service__style--2">
-                                            <div className="icon">
-                                                {val.icon}
-                                            </div>
-                                            <div className="content">
-                                                <h3 className="title">{val.title}</h3>
-                                                <p>{val.description}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                {/* End Service Area */}
+               
 
-                {/* Start Service Area */}
-                <div className="service-area creative-service-wrapper pt--90 pb--120 bg_color--5">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="section-title text-center mb--30">
-                                    <h2>Creative Agency</h2>
-                                    <p>There are many variations of passages of Lorem Ipsum available, <br /> but the majority have suffered alteration.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row creative-service">
-                            {ServiceList.map( (val , i) => (
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12" key={i}>
-                                    <a href="/service-details">
-                                        <div className="service service__style--2">
-                                            <div className="icon">
-                                                {val.icon}
-                                            </div>
-                                            <div className="content">
-                                                <h3 className="title">{val.title}</h3>
-                                                <p>{val.description}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                {/* End Service Area */}
-
-                {/* Start Service Area */}
-                <div className="service-area creative-service-wrapper pt--90 pb--120 bg_color--1">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="section-title text-center mb--30">
-                                    <h2>Development</h2>
-                                    <p>There are many variations of passages of Lorem Ipsum available, <br /> but the majority have suffered alteration.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row creative-service">
-                            {ServiceList.map( (val , i) => (
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12" key={i}>
-                                    <a className="text-center" href="/service-details">
-                                        <div className="service service__style--2">
-                                            <div className="icon">
-                                                {val.icon}
-                                            </div>
-                                            <div className="content">
-                                                <h3 className="title">{val.title}</h3>
-                                                <p>{val.description}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                {/* End Service Area */}
+            
 
                 {/* Start Back To Top */}
                 <div className="backto-top">
@@ -192,5 +120,5 @@ class Service extends Component{
             </React.Fragment>
         )
     }
-}
+// }
 export default Service;

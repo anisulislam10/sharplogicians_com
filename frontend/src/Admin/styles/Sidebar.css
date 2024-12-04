@@ -1,6 +1,6 @@
 /* Sidebar.css */
 .sidebar {
-    margin-top: 180px;
+    margin-top: 55px;
     width: 200px;
     /* background: #f4f4f452; */
     padding: 20px;
@@ -19,6 +19,7 @@
     list-style-type: none;
     padding: 0;
     
+    
 }
 
 
@@ -26,20 +27,25 @@
 .sidebar ul li {
     padding: 13px;
     cursor: pointer;
+    width: 100%;
 }
 .sidebar ul li:hover {
     padding: 13px;
     cursor: pointer;
-    background: #e7dada8f;
+    background: #adaeaf36;
+    color: rgb(12, 1, 1);
+    width: 100%;
 }
 
 .sidebar ul li a {
     text-decoration: none;
     color: inherit;
+    width: 100%;
 }
 
 .sidebar ul li a:hover {
     text-decoration: none;
+    
 }
 .profile-section {
     text-align: center;
@@ -64,4 +70,39 @@
 .email {
     font-size: 0.9rem;
     color: #666;
+}
+
+li.active {
+    background-color: #0067d4; /* Blue background for active item */
+    color: rgb(233, 233, 233); /* White text color for active item */
+    border-radius: 1px;
+}
+
+
+
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* ul li {
+    padding: 10px 20px;
+    margin: 5px 0;
+} */
+
+ul li a {
+    text-decoration: none;
+    color: #333; 
+    display: flex;
+    align-items: center;
+}
+
+ul li a:hover {
+    /* background-color: #f0f0f0; Optional: Highlight on hover */
+}
+
+ul li a.active {
+    color: white; /* Change text color for active item when clicked */
 }

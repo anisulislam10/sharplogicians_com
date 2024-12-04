@@ -5,19 +5,20 @@ import { deletePortfolio } from "../../api/portfolioApi";  // Import deletePortf
 import "./../../styles/Table.css";
 
 const Table = ({ data = [], type, setData }) => {
-    const navigate = useNavigate(); // Navigate function to redirect
-
+    const navigate = useNavigate(); 
+    const truncateText = (text, maxLength = 20) => {
+        if (!text) return "";
+        return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    };
     const handleEdit = (id) => {
         // Navigate to edit page
-        navigate(`/portfolio/edit-portfolio/${id}`);
+        navigate(`/admin/portfolio/edit-portfolio/${id}`);
     };
 
     const handleDelete = async (id) => {
         try {
-            // Call the delete Portfolio API
             const result = await deletePortfolio(id);
             if (result.status) {
-                // Successfully deleted, update the UI
                 setData((prevData) => prevData.filter((item) => item._id !== id));  // This is where setData is used
                 alert("Portfolio deleted successfully");
             } else {
@@ -38,8 +39,14 @@ const Table = ({ data = [], type, setData }) => {
             return (
                 <>
                     <th key="title">Title</th>
-                    <th key="image">Image</th>
+                    {/* <th key='content'>content</th> */}
+
+                    {/* <th key="shortDesc">shortDesc</th> */}
                     <th key="type">Type</th>
+                    <th key="projectType">Project Type</th>
+                    <th key="branchType">branch Type</th>
+                    <th key="program">Program</th>
+                    <th key="image">Image</th>
                     <th key="actions">Actions</th>
                 </>
             );
@@ -55,9 +62,15 @@ const Table = ({ data = [], type, setData }) => {
                 <tr key={item._id}>
                     {type === "portfolio" && (
                         <>
-                            <td key={`title-${item._id}`}>{item.title}</td>
-                            <td key={`image-${item._id}`}><img src={item.image} alt="Portfolio" width={100} /></td>
+                            <td key={`title-${item._id}`}>{truncateText(item.title)}</td>
+                            {/* <td key={`shortDesc-${item._id}`}>{truncateText(item.shortDesc)}</td> */}
+                            {/* <td key={`content-${item._id}`}>{truncateText(item.content)}</td> */}
+
                             <td key={`type-${item._id}`}>{item.type}</td>
+                            <td key={`projectType-${item._id}`}>{truncateText(item.projectType)}</td>
+                            <td key={`branchType-${item._id}`}>{item.branchType}</td>
+                            <td key={`program-${item._id}`}>{item.program}</td>
+                            <td key={`image-${item._id}`}><img src={item.image} alt="Portfolio" width={100} /></td>
                             <td key={`actions-${item._id}`}>
                                 <FaEdit
                                     style={{ cursor: "pointer", marginRight: "10px", color: "#28a745" }}

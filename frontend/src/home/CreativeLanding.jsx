@@ -18,9 +18,11 @@ import Contact from "../elements/contact/ContactTwo";
 import Helmet from "../component/common/Helmet";
 
 import logoLight from "../assets/images/logo/logo-white.png";
-import logoAllDark from "../assets/images/logo/logo-white.png";
+import logoAllDark from "../assets/images/logo/logo-dark.png";
 import aboutImg from "../assets/images/about/about-3.jpg";
 import ScrollSpy from "../component/common/ScrollSpy";
+import AboutUs from "./AboutUs";
+import QuoteForm from "../component/header/QuoteForm";
 
 const SlideList = [
   {
@@ -30,42 +32,11 @@ const SlideList = [
     description:
       "Improve performance through design, development, & digital marketing.",
     buttonText: "Contact Us",
-    buttonLink: "/contact",
+    buttonLink: "/#contact",
   },
 ];
 
-const list = [
-  {
-    image: "image-1",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-  {
-    image: "image-2",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-  {
-    image: "image-3",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-  {
-    image: "image-4",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-  {
-    image: "image-3",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-  {
-    image: "image-4",
-    category: "Development",
-    title: "Getting tickets to the big show",
-  },
-];
+
 
 class CreativeLanding extends Component {
   constructor(props) {
@@ -77,8 +48,11 @@ class CreativeLanding extends Component {
     //state for dyamic items for portfolio
     this.state = {
       data:[],
+      blogs:[],
       isLoading: true,
       error: null,
+      isBlogLoading:true,
+      blogError:null
     };
 
    
@@ -97,29 +71,50 @@ class CreativeLanding extends Component {
     document.querySelector(".header-wrapper")?.classList.remove("menu-open");
   }
   stickyHeader() {}
+
+  
     // Custom method for fetching data
     componentDidMount() {
+      // Existing portfolio method remains unchanged
       axios.get(import.meta.env.VITE_API_API_GET_PORTFOLIO)
         .then(response => {
+          console.log("bloggggsssss",response);
+
           this.setState({ data: response.data, isLoading: false });
         })
         .catch(error => {
-          this.setState({ error, isLoading: false });
+          this.setState({ data: [], error, isLoading: false });
         });
+        axios.get(import.meta.env.VITE_API_BASE_URL_GET_BLOG)
+        .then(response => {
+          console.log("bloggggsssss",response);
+          
+          this.setState({ blogs:  response.data.blog, isBlogLoading: false });
+        })
+        .catch(error => {
+          this.setState({ blogs: [], blogError: error, isBlogLoading: false });
+        });
+      // Call the method to fetch blog data
     }
+    
+    // New method to fetch blog data
+    
+
+
+
   render() {
 
 
 //for dynamic items for portfolio
-    const { data, isLoading, error } = this.state;
+    const { data,blogs, isLoading, error } = this.state;
 
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    }
+    // if (error) {
+    //   return <div>Error: {error.message}</div>;
+    // }
 
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
+    // if (isLoading) {
+    //   return <div>Loading...</div>;
+    // }
 
     const PostList = BlogContent.slice(0, 5);
 
@@ -171,6 +166,7 @@ class CreativeLanding extends Component {
                       "#testimonial",
                       "#blog",
                       "#contact",
+
                     ]}
                   />
                 </ul>
@@ -178,9 +174,10 @@ class CreativeLanding extends Component {
               <div className="header-btn">
                 <a
                   className="rn-btn"
-                  href="https://themeforest.net/checkout/from_item/25457315?license=regular"
-                >
-                  <span>buy now</span>
+                  href="/quote"
+                 
+                > 
+                  <span>Get a quote</span>
                 </a>
               </div>
               {/* Start Humberger Menu  */}
@@ -269,52 +266,13 @@ class CreativeLanding extends Component {
         {/* End Service Area  */}
 
         {/* Start About Area */}
-        <div className="about-area ptb--120 bg_color--5" id="about">
-          <div className="about-wrapper">
-            <div className="container">
-              <div className="row row--35 align-items-center">
-                <div className="col-lg-5">
-                  <div className="thumbnail">
-                    <img className="w-100" src={aboutImg} alt="About Images" />
-                  </div>
-                </div>
-                <div className="col-lg-7">
-                  <div className="about-inner inner">
-                    <div className="section-title">
-                      <h2 className="title">About Us</h2>
-                      <p className="description">
-                      SharpLogicians is a combination of charisma and quality focused Project Managers, Designers, Developers, 
-                      QA Team & Supportive Staff.
+        
 
 
-                      </p>
-                    </div>
-                    <div className="row mt--30">
-                      <div className="col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div className="about-us-list">
-                          <h3 className="title">Who we are</h3>
-                          <p>
-                            There are many vtions of passages of Lorem Ipsum
-                            available, but the majority have suffered.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div className="about-us-list">
-                          <h3 className="title">Who we are</h3>
-                          <p>
-                            There are many vtions of passages of Lorem Ipsum
-                            available, but the majority have suffered.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Start About Area */}
+       <>
+       <AboutUs/>
+       </>
         {/* End About Area */}
 
         {/* Start Portfolio Area */}
@@ -328,7 +286,7 @@ class CreativeLanding extends Component {
                 <div className="col-lg-6">
                   <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                     <h2 className="title">Our Portfolio</h2>
-                    <p>
+                    <p style={{textAlign:'left'}}>
                       There are many variations of passages of Lorem Ipsum
                       available, but the majority have suffered alteration.
                     </p>
@@ -338,40 +296,41 @@ class CreativeLanding extends Component {
               <div className="row">
                 <div className="col-lg-12">
                   <div className="slick-space-gutter--15 slickdot--20">
-                    <Slider {...slickDot}>
-                    {data.portfolio.map((item, index) =>  (
-                      
-                                            <div className="portfolio" key={index}>
-                          <div className="thumbnail-inner">
-                            <div className={`thumbnaiss`}>
-                              <img src={item.image}
-                         
-                            ></img>
-                            </div>
-                            <div
-                              className={`bg-blr-image ${item.image}`}
-                            ></div>
-                          </div>
-                          <div className="content">
-                            <div className="inner">
-                              <p>{item.type}</p>
-                              <h4>
-                                <a href="/portfolio-details">{item.title}</a>
-                              </h4>
-                              <div className="portfolio-button">
-                                <a className="rn-btn" href="/portfolio-details">
+                  {data && data.portfolio?.length > 0 ? (
+  <Slider {...slickDot}>
+    {data.portfolio.map((item, index) => (
+      <div className="portfolio" key={index}>
+        <div className="thumbnail-inner">
+          <div >
+            <img className="thumbnaiss" src={item.image} alt={item.title} style={{height:'580px'}}/>
+          </div>
+        </div>
+        <div className="content">
+          <div className="inner">
+            <p style={{ textAlign: "left" }}>{item.type}</p>
+            <h4>
+              <Link to={`portfolio-details/${item._id}`}>{item.title}</Link>
+            </h4>
+            <div className="portfolio-button">
+                                <Link className="rn-btn" to={`/portfolio-details/${item._id}`}>
                                   Case Study
-                                </a>
+                                </Link>
                               </div>
-                            </div>
-                          </div>
-                          <Link
-                            className="link-overlay"
-                            to="/portfolio-details"
-                          ></Link>
+          </div>
+        </div>
+                              <Link className="link-overlay"
+                            
+                            to={`/portfolio-details/${item._id}`}>
+                            </Link>
                         </div>
-                      ))}
-                    </Slider>
+      
+    ))}
+  </Slider>
+) : (
+  <div>No portfolio items available</div>
+)}
+
+                   
                   </div>
                 </div>
               </div>
@@ -402,7 +361,7 @@ class CreativeLanding extends Component {
               <div className="col-lg-6">
                 <div className="section-title service-style--3 text-left mb--25 mb_sm--0">
                   <h2 className="title">Skilled Team</h2>
-                  <p>
+                  <p style={{textAlign:'left'}}>
                     There are many variations of passages of Lorem Ipsum
                     available, but the majority have suffered alteration.
                   </p>
@@ -427,55 +386,68 @@ class CreativeLanding extends Component {
         </div>
         {/* End Testimonial Area */}
 
-        {/* Start Blog Area */}
-        <div className="rn-blog-area pt--120 pb--140 bg_color--1" id="blog">
-          <div className="container">
-            <div className="row align-items-end">
-              <div className="col-lg-6">
-                <div className="section-title text-left">
-                  <h2>Latest News</h2>
-                  <p>
-                    There are many variations of passages of Lorem Ipsum
-                    available, but the majority have suffered alteration.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="row mt--55 mt_sm--30 rn-slick-dot slick-space-gutter--15 slickdot--20 row--0">
-              <div className="col-lg-12">
-                <Slider {...slickDot}>
-                  {PostList.map((value, i) => (
-                    <div className="blog blog-style--1" key={i}>
-                      <div className="thumbnail">
-                        <a href="/blog-details">
-                          <img src={value.images} alt="Blog Images" />
-                        </a>
-                      </div>
-                      <div className="content">
-                        <p className="blogtype">{value.category}</p>
-                        <h4 className="title">
-                          <a href="/blog-details">{value.title}</a>
-                        </h4>
-                        <div className="blog-btn">
-                          <a className="rn-btn text-white" href="/blog-details">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </Slider>
-              </div>
+       {/* Start Blog Area */}
+<div className="rn-blog-area pt--120 pb--140 bg_color--1" id="blog">
+  <div className="container">
+    <div className="row align-items-end">
+      <div className="col-lg-6">
+        <div className="section-title text-left">
+          <h2>Latest News</h2>
+          <p style={{textAlign:'left'}}>
+            There are many variations of passages of Lorem Ipsum
+            available, but the majority have suffered alteration.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div className="row mt--55 mt_sm--30 rn-slick-dot slick-space-gutter--15 slickdot--20 row--0">
+      <div className="col-lg-12">
+      {Array.isArray(blogs) && blogs.length > 0 ? (
+  <Slider {...slickDot}>
+    {blogs.map((item, index) => (
+      <div key={index}>
+        <div className="blog blog-style--1">
+          <div className="thumbnail">
+            <Link to={`/blog-details/${item._id}`}>
+              <img src={item.image} alt="Blog Images" />
+            </Link>
+          </div>
+          <div className="content">
+            <p className="blogtype" style={{textAlign:'left'}}>{item.author}</p>
+            <h4 className="title">
+              <Link to={`/blog-details/${item._id}`}>{item.title}</Link>
+            </h4>
+            <div className="blog-btn">
+              <Link to={`/blog-details/${item._id}`} className="rn-btn text-white">
+                Read More
+              </Link>
             </div>
           </div>
         </div>
-        {/* End Blog Area */}
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div>No blogs items available</div>
+)}
+
+      </div>
+    </div>
+  </div>
+</div>
+{/* End Blog Area */}
+
 
         {/* Start Contact Us */}
         <div className="rn-contact-us ptb--120 bg_color--5" id="contact">
           <Contact />
         </div>
         {/* End Contact Us */}
+
+
+
+
+
 
         {/* Start Brand Area */}
         <div className="rn-brand-area bg_color--1 ptb--120">

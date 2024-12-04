@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";  // Import useNavigate from react-dom
 import Table from "../components/Table";
 import { fetchServices } from "../api/servicesApi";
 import Pagination from "../components/Pagination"; // Import Pagination component
@@ -17,6 +17,8 @@ const Services = () => {
         const getServices = async () => {
             try {
                 const response = await fetchServices(currentPage, servicesPerPage);
+                console.log(response.data);
+                
                 setServices(response.data.services); // Set the data from the API response
                 setTotalPages(Math.ceil(response.data.total / servicesPerPage)); // Calculate total pages
             } catch (error) {

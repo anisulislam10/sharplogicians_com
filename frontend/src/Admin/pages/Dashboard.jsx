@@ -11,7 +11,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", }}>
             <Sidebar onMenuSelect={handleMenuSelect} />
             <div style={{ marginLeft: "250px", padding: "20px", width: "100%" }}>
                 <Outlet />

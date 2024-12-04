@@ -21,10 +21,10 @@ const BrandTwo = () => {
   }, []); 
 
   return (
-    <><h3>Brands Who Trusts Us.</h3><ul className="brand-style-2">
+    <><ul className="brand-style-2">
       {Client.map((client, index) => (
         <li key={client._id}>
-          <img
+          <img 
             src={client.image} // Use the `image` field from the API response
             alt={`Logo Images ${index + 1}`}
             // Styling for consistent sizing

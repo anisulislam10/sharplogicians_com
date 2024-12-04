@@ -1,7 +1,10 @@
 /*------------------------
     Team Styles 
 ----------------------*/
-
+// @import './../default/variables.scss';
+// @import './../default/extend.scss';
+// @import './../default/mixins.scss';
+// @import './../default/spacing.scss';
 .team {
     margin-top: 30px;
     overflow: hidden;
@@ -238,9 +241,9 @@ ul {
                 text-align: center;
                 font-size: 14px;
                 transition: 0.3s;
-                &:hover {
-                    color: $theme-color;
-                }
+                // &:hover {
+                //     color: $theme-color;
+                // }
             }
         }
     }

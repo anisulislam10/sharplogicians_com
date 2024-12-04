@@ -8,6 +8,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
+import axios from "axios";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -20,11 +21,38 @@ class Contact extends Component {
     zoom: 11,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      contact: null, // Store the contact data
+      loading: true,  // Loading state to handle async call
+    };
+  }
+
+  // Fetch contact data from the API
+  componentDidMount() {
+    axios
+      .get("http://localhost:3000/api/admin/contact/get")
+      .then((response) => {
+        if (response.data.status) {
+          this.setState({
+            contact: response.data.contact[0], // Set the first contact details
+            loading: false, // Set loading to false once data is fetched
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching contact data: ", error);
+        this.setState({ loading: false }); // Handle error by setting loading to false
+      });
+  }
+
   render() {
+    const { contact, loading } = this.state;
+
     return (
       <React.Fragment>
         <PageHelmet pageTitle="Contact" />
-
         <Header
           headertransparent="header--transparent"
           colorblack="color--black"
@@ -40,7 +68,7 @@ class Contact extends Component {
             <div className="row">
               <div className="col-lg-12">
                 <div className="rn-page-title text-center pt--100">
-                  <h2 className="title theme-gradient">Cntact With Us</h2>
+                  <h2 className="title theme-gradient">Contact With Us</h2>
                   <p>
                     Contrary to popular belief, Lorem Ipsum is not simply random
                     text.{" "}
@@ -56,7 +84,7 @@ class Contact extends Component {
         <div className="rn-contact-top-area ptb--120 bg_color--5">
           <div className="container">
             <div className="row">
-              {/* Start Single Address  */}
+              {/* Start Single Address */}
               <div className="col-lg-4 col-md-6 col-sm-6 col-12">
                 <div className="rn-address">
                   <div className="icon">
@@ -64,18 +92,20 @@ class Contact extends Component {
                   </div>
                   <div className="inner">
                     <h4 className="title">Contact With Phone Number</h4>
-                    <p>
-                      <a href="tel:+057 254 365 456">+057 254 365 456</a>
-                    </p>
-                    <p>
-                      <a href="tel:+856 325 652 984">+856 325 652 984</a>
-                    </p>
+                    {/* Display phone number dynamically */}
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <p style={{textAlign:'left'}}>
+                        <a href={`tel:${contact.phoneNo}`}>{contact.phoneNo}</a>
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
-              {/* End Single Address  */}
+              {/* End Single Address */}
 
-              {/* Start Single Address  */}
+              {/* Start Single Address */}
               <div className="col-lg-4 col-md-6 col-sm-6 col-12 mt_mobile--50">
                 <div className="rn-address">
                   <div className="icon">
@@ -83,18 +113,20 @@ class Contact extends Component {
                   </div>
                   <div className="inner">
                     <h4 className="title">Email Address</h4>
-                    <p>
-                      <a href="mailto:admin@gmail.com">admin@gmail.com</a>
-                    </p>
-                    <p>
-                      <a href="mailto:example@gmail.com">example@gmail.com</a>
-                    </p>
+                    {/* Display email dynamically */}
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <p style={{textAlign:'left'}}>
+                        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
-              {/* End Single Address  */}
+              {/* End Single Address */}
 
-              {/* Start Single Address  */}
+              {/* Start Single Address */}
               <div className="col-lg-4 col-md-6 col-sm-6 col-12 mt_md--50 mt_sm--50">
                 <div className="rn-address">
                   <div className="icon">
@@ -102,24 +134,26 @@ class Contact extends Component {
                   </div>
                   <div className="inner">
                     <h4 className="title">Location</h4>
-                    <p>
-                      5678 Bangla Main Road, cities 580 <br /> GBnagla, example
-                      54786
-                    </p>
+                    {/* Display location dynamically */}
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <p style={{textAlign:'left'}}>{contact.location}</p>
+                    )}
                   </div>
                 </div>
               </div>
-              {/* End Single Address  */}
+              {/* End Single Address */}
             </div>
           </div>
         </div>
-        {/* End Contact Top Area  */}
+        {/* End Contact Top Area */}
 
         {/* Start Contact Page Area  */}
         <div className="rn-contact-page ptb--120 bg_color--1">
           <ContactTwo />
         </div>
-        {/* End Contact Page Area  */}
+        {/* End Contact Page Area */}
 
         {/* Start Contact Map  */}
         <div className="rn-contact-map-area position-relative">
@@ -136,7 +170,7 @@ class Contact extends Component {
             </GoogleMapReact>
           </div>
         </div>
-        {/* End Contact Map  */}
+        {/* End Contact Map */}
 
         {/* Start Brand Area */}
         <div className="rn-brand-area brand-separation bg_color--5 ptb--120">

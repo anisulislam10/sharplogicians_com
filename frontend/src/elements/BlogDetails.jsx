@@ -1,28 +1,44 @@
-import React, { Component } from "react";
+import React, { Component,useState, useEffect } from "react";
 import PageHelmet from "../component/common/Helmet";
-import ModalVideo from "react-modal-video";
 import { FiClock, FiUser, FiMessageCircle, FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useLocation, useParams } from 'react-router-dom';
+import axios from 'axios'
+import './../Admin/pages/Blogs/EditorStyle.css'
+
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
 
-import imgOne from "../assets/images/blog/bl-big-01.jpg";
-import imgTwo from "../assets/images/blog/blog-single-01.png";
 
-class BlogDetails extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isOpen: false,
-    };
-    this.openModal = this.openModal.bind(this);
-  }
-  openModal() {
-    this.setState({ isOpen: true });
-  }
-  render() {
+const BlogDetails =()=> {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Using useLocation hook to access query parameters
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const query = searchParams.get('search');
+  console.log('Query Parameter:', query);
+
+  const { id } = useParams();
+  console.log("ID_PARAMS::", id);
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL_BLOGSS}/${id}`)
+      .then(response => {
+        console.log("get data from Blogs:",response);
+        
+        setData(response.data.blog);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        setError(error);
+        setIsLoading(false);
+      });
+  }, [id]);
     return (
       <React.Fragment>
         <PageHelmet pageTitle="Blog Details" />
@@ -42,17 +58,45 @@ class BlogDetails extends Component {
               <div className="col-lg-12">
                 <div className="blog-single-page-title text-center pt--100">
                   <h2 className="title theme-gradient">
-                    The Home of the Future <br /> Could Bebes
+
+                    {
+                    data && data ? (
+                    <div>{data.title}</div>
+ 
+                      ):(
+                        <p>No Header Available</p>
+                      )
+                    }
                   </h2>
                   <ul className="blog-meta d-flex justify-content-center align-items-center">
                     <li>
-                      <FiClock />
-                      May 18, 2024
+                    <FiClock />
+                      {data && data.createdAt ? (
+                        <div>
+                          {new Date(data.createdAt).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'numeric',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </div>
+ 
+                      ):(
+                        <p>No Header Available</p>
+                      )
+                    }
                     </li>
                     <li>
                       <FiUser />
-                      NipaBali
-                    </li>
+                      {
+                    data && data ? (
+                    <div>{data.author}</div>
+ 
+                      ):(
+                        <p>No Header Available</p>
+                      )
+                    }                    </li>
                     <li>
                       <FiMessageCircle />
                       15 Comments
@@ -77,143 +121,36 @@ class BlogDetails extends Component {
                 <div className="inner-wrapper">
                   <div className="inner">
                     <p>
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form, by injected humour, or randomised words which
-                      don't look even slightly believable. If you are going to
-                      use a passage of Lorem Ipsum. You need to be sure there
-                      isn't anything embarrassing hidden in the middle of text.
-                      All the Lorem Ipsum generators on the Internet tend
-                      toitrrepeat predefined chunks.{" "}
+                    <div
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: data.content }} // Render HTML content
+      />
+                    
                     </p>
-                    <div className="thumbnail">
-                      <img src={imgOne} alt="Blog Images" />
-                    </div>
-                    <p className="mt--40">
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form, by injected humour, or randomised words which
-                      don't look even slightly believable. If you are going to
-                      use a passage of Lorem Ipsum. You need to be sure there
-                      isn't anything embarrassing hidden in the middle of text.
-                      All the Lorem Ipsum generators on the Internet tend
-                      toitrrepeat predefined chunks.{" "}
-                    </p>
-                    <p>
-                      Necessary, making this the first true generator on the
-                      Internet. It re are many variations of passages of Lo rem
-                      Ipsum available, but the majority have suffered alteration
-                      in some form, by injectedeed eedhumour, or randomised
-                      words which don't look even slightly believable.
-                    </p>
-                    <blockquote className="rn-blog-quote">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                      Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-                      natoque penatibus et magnis dis parturient montes.
-                    </blockquote>
-                    <p>
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form, by injected humour, or randomised words which
-                      don't look even slightly believable. If you are going to
-                      use a passage of Lorem Ipsum. You need to be sure there
-                      isn't anything embarrassing hidden in the middle of text.
-                      All the Lorem Ipsum generators on the Internet tend
-                      toitrrepeat predefined chunks. Necessary, making this the
-                      first true generator on the Internet. It re are many
-                      variations of passages of Lorem Ipsum available, but the
-                      majority have suffered alteration in some form, by
-                      injectedeed eedhumour, or randomised words which don't
-                      look even slightly believable.
-                    </p>
+                    
+                   
                     <div className="blog-single-list-wrapper d-flex flex-wrap">
                       <div className="thumbnail">
-                        <img className="w-100" src={imgTwo} alt="BLog Images" />
+                        {/* <img className="w-100" src={imgTwo} alt="BLog Images" /> */}
+
+
+                        
                         <span>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do
+                          
                         </span>
                       </div>
                       <div className="content">
                         <p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Quis ipsum suspendisse ultrices
-                          gravida. Risus commodo .
+                          
                         </p>
-                        <h4 className="title">Ordered & Unordered Lists.</h4>
-                        <ul className="list-style">
-                          <li>Yet this above sewed flirted opened ouch</li>
-                          <li>Goldfinch realistic sporadic ingenuous</li>
-                          <li>
-                            Abominable this abidin far successfully then like
-                            piquan
-                          </li>
-                          <li>Risus commodo viverra</li>
-                          <li>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                          </li>
-                        </ul>
-                        <h4 className="title">Ordered & Unordered Lists.</h4>
-                        <ul className="list-style">
-                          <li>Yet this above sewed flirted opened ouch</li>
-                          <li>Goldfinch realistic sporadic ingenuous</li>
-                          <li>
-                            Abominable this abidin far successfully then like
-                            piquan
-                          </li>
-                          <li>Risus commodo viverra</li>
-                        </ul>
+                        
+                        
                       </div>
                     </div>
 
-                    <p className="mt--25 mt_sm--5">
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form, by injected humour, or randomised words which
-                      don't look even slightly believable. If you are going to
-                      use a passage of Lorem Ipsum. You need to be sure there
-                      isn't anything embarrassing hidden in the middle of text.
-                      All the Lorem Ipsum generators on the Internet tend
-                      toitrrepeat predefined chunks. Necessary, making this the
-                      first true generator on the Internet. It re are many
-                      variations of passages of Lorem Ipsum available, but the
-                      majority have suffered alteration in some form, by
-                      injectedeed eedhumour, or randomised words which don't
-                      look even slightly believable.
-                    </p>
-                    <div className="video-wrapper position-relative mb--40">
-                      <div className="thumbnail">
-                        <img src={imgOne} alt="Blog Images" />
-                      </div>
-                      <ModalVideo
-                        channel="youtube"
-                        isOpen={this.state.isOpen}
-                        videoId="ZOoVOfieAF8"
-                        onClose={() => this.setState({ isOpen: false })}
-                      />
-                      <button
-                        className="video-popup position-top-center"
-                        onClick={this.openModal}
-                      >
-                        <span className="play-icon"></span>
-                      </button>
-                    </div>
-                    <p className="mb--0">
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form, by injected humour, or randomised words which
-                      don't look even slightly believable. If you are going to
-                      use a passage of Lorem Ipsum. You need to be sure there
-                      isn't anything embarrassing hidden in the middle of text.
-                      All the Lorem Ipsum generators on the Internet tend
-                      toitrrepeat predefined chunks. Necessary, making this the
-                      first true generator on the Internet. It re are many
-                      variations of passages of Lorem Ipsum available, but the
-                      majority have suffered alteration in some form, by
-                      injectedeed eedhumour, or randomised words which don't
-                      look even slightly believable.
-                    </p>
+                  
+                    
+                    
                   </div>
                 </div>
               </div>
@@ -282,5 +219,5 @@ class BlogDetails extends Component {
       </React.Fragment>
     );
   }
-}
+
 export default BlogDetails;

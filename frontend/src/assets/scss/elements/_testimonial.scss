@@ -1,6 +1,14 @@
 /* ---------------------------
 Testimonial Styles 
 ------------------------------*/
+@import './../default/variables.scss';
+// @import './../default/extend.scss';
+@import './../common/socialicon.scss';
+@import './../default/animations.scss';
+@import './../default/mixins.scss';
+// @import './../default/reset.scss';
+
+// @import './team.scss';
 
 
 .react-tabs__tab-panel{
@@ -35,7 +43,7 @@ Testimonial Styles
             padding-bottom: 30px;
         }
         p {
-            font-size: 36px;
+            font-size: 41px;
             line-height: 58px;
             color: #18181b;
             font-weight: 500;
@@ -66,7 +74,7 @@ Testimonial Styles
                 height: 100%;
                 left: 25%;
                 top: -50px;
-                background-image: url(/assets/images/client/image-1.png);
+                background-image: url('/src/assets/images/client/image-1.png');
                 content: "";
                 opacity: 1;
                 background-repeat: no-repeat;
@@ -86,7 +94,7 @@ Testimonial Styles
                 height: 202px;
                 right: 25%;
                 bottom: -115px;
-                background-image: url(/assets/images/client/image-2.png);
+                background-image: url('/src/assets/images/client/image-2.png');
                 content: "";
                 opacity: 1;
                 background-repeat: no-repeat;
@@ -155,7 +163,9 @@ Testimonial Styles
     }
 
 }
-
+%transition {
+    transition: all 0.3s ease-in-out;
+  }
 
 /* ------------------------------
 Testimonial Thumbnail 

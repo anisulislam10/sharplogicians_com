@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import PageHelmet from "../component/common/Helmet";
 import ModalVideo from "react-modal-video";
+import { Link, useLocation, useParams } from 'react-router-dom';
+import axios from "axios";
 import {
   FaTwitter,
   FaInstagram,
@@ -13,31 +15,65 @@ import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
 
 const SocialShare = [
-  { Social: <FaFacebookF />, link: "https://www.facebook.com/" },
+  { Social: <FaFacebookF />, link: "https://www.facebook.com/sharer.php" },
   { Social: <FaLinkedinIn />, link: "https://www.linkedin.com/" },
   { Social: <FaInstagram />, link: "https://www.instagram.com/" },
   { Social: <FaTwitter />, link: "https://twitter.com/" },
 ];
 
-import portfolio1 from "../assets/images/portfolio/portfolio-big-01.jpg";
-import portfolio2 from "../assets/images/portfolio/portfolio-big-02.jpg";
-import portfolio3 from "../assets/images/portfolio/portfolio-big-03.jpg";
-import relatedImg1 from "../assets/images/portfolio/related-image-01.jpg";
-import relatedImg2 from "../assets/images/portfolio/related-image-02.jpg";
 
-class PortfolioDetails extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isOpen: false,
-    };
-    this.openModal = this.openModal.bind(this);
-  }
-  openModal() {
-    this.setState({ isOpen: true });
-  }
-  render() {
+import RandomRroject from './RandomProjects'
+
+  
+  const PortfolioDetails = () => {
+    const [data, setData] = useState([]);
+    
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    // Using useLocation hook to access query parameters
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const query = searchParams.get('search');
+    console.log('Query Parameter:', query);
+  
+    // Using useParams hook to access route parameters
+    const { id } = useParams();
+    console.log('ID_PARAMS::', id);
+  
+    useEffect(() => {
+      // Example of making an API call or other data fetching
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL_GET_PORTFOLIOO}/${id}`)
+        .then((response) => {
+          console.log('get data from portfolio:', response.data);
+          setData(response.data.portfolio);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          // setError(error);
+          // setIsLoading(false);
+        });
+    }, [id]);
+
+
+
+    
+
+    
+  
+    // Handle loading and error states
+    if (isLoading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (error) {
+      return <div>Error fetching data</div>;
+    }
+
     return (
+
+      
       <React.Fragment>
         <PageHelmet pageTitle="Portfolio Details" />
 
@@ -57,11 +93,17 @@ class PortfolioDetails extends Component {
               <div className="col-lg-12">
                 <div className="rn-page-title text-center pt--100">
                   <h2 className="title theme-gradient">
-                    Getting tickets to the big show
+                    {
+                      data && data? (
+                        <h1>{data.title}</h1>
+                      ): (
+                        <p>No Portolio Title Available</p>
+                      )
+                    }
+                    
                   </h2>
                   <p>
-                    Contrary to popular belief, Lorem Ipsum is not simply random
-                    text.{" "}
+                    
                   </p>
                 </div>
               </div>
@@ -77,34 +119,60 @@ class PortfolioDetails extends Component {
               <div className="col-lg-12">
                 <div className="portfolio-details">
                   <div className="inner">
-                    <h2>Trydo</h2>
+                   
+
+
+                    {
+                      data && data? (
+                        <h4>{data.title}</h4>
+                      ): (
+                        <p>No Portolio Title Available</p>
+                      )
+                    }
+
+
                     <p className="subtitle">
-                      There are many variations of passages of Lorem Ipsum
-                      available, but the majority have suffered alteration in
-                      some form.
-                    </p>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Quis ipsum suspendisse ultrices gravida. Risus
-                      commod viverra maecenas accumsan lacus vel facilisis. ut
-                      labore et dolore magna aliqua.{" "}
+                   
                     </p>
 
                     <div className="portfolio-view-list d-flex flex-wrap">
                       <div className="port-view">
                         <span>Branch</span>
-                        <h4>Ability</h4>
+                        {
+                      data && data? (
+                        <h4>{data.branchType} </h4>
+                      ): (
+                        <h4>No Portolio Title Available</h4>
+                      )
+                    }
+
                       </div>
 
                       <div className="port-view">
                         <span>Project Types</span>
-                        <h4>Website</h4>
+
+                        {
+                      data && data? (
+                        <h4>{data.projectType} </h4>
+                      ): (
+                        <h4></h4>
+                      )
+                    }
+
                       </div>
 
                       <div className="port-view">
                         <span>Program</span>
-                        <h4>View Project</h4>
+
+                        {
+                      data && data? (
+                        <h4>{data.program} </h4>
+                      ): (
+                        <h4>No Portolio  Available</h4>
+                      )
+                    }
+
+                        
                       </div>
                     </div>
 
@@ -120,27 +188,64 @@ class PortfolioDetails extends Component {
                   </div>
                   <div className="portfolio-thumb-inner">
                     <div className="thumb position-relative mb--30">
-                      <img src={portfolio3} alt="Portfolio Images" />
-                      <ModalVideo
+
+                    <div className="thumb position-relative mb--30">
+                    <div
+                     />
+        </div>
+        <div
+  dangerouslySetInnerHTML={{ __html: data.content }} // Render HTML content
+  style={{
+    
+    
+  }}
+/>
+
+
+
+
+
+{/* Video Section */}
+{
+  data && data.video ? (
+    <div className="video-container">
+      <h4>Project Video</h4>
+      <video controls width="100%">
+        <source src={data.video} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  ) : (
+    <p></p>
+  )
+}
+                      {/* <ModalVideo
                         channel="youtube"
                         isOpen={this.state.isOpen}
                         videoId="ZOoVOfieAF8"
                         onClose={() => this.setState({ isOpen: false })}
-                      />
-                      <button
+                      /> */}
+                      {/* <button
                         className="video-popup position-top-center"
-                        onClick={this.openModal}
+                        // onClick={this.openModal}
                       >
                         <span className="play-icon"></span>
-                      </button>
+                      </button> */}
                     </div>
 
                     <div className="thumb mb--30">
-                      <img src={portfolio2} alt="Portfolio Images" />
+                      {/* {
+                        data && data?(
+                          <img src={data.image} alt="Portfolioooo Images" />
+
+                        ):(
+                          <p>No Image Available</p>
+                        )
+                      } */}
                     </div>
 
                     <div className="thumb">
-                      <img src={portfolio1} alt="Portfolio Images" />
+                      {/* <img src={portfolio1} alt="Portfolio Images" /> */}
                     </div>
                   </div>
                 </div>
@@ -167,45 +272,48 @@ class PortfolioDetails extends Component {
               {/* Start Single Portfolio */}
               <div className="col-lg-6 col-md-6 col-12">
                 <div className="related-work text-center mt--30">
-                  <div className="thumb">
-                    <a href="/portfolio-details">
-                      <img
-                        src={relatedImg1}
-                        alt="Portfolio-images"
-                      />
-                    </a>
+                  <div >
+                  <Link to={`/portfolio-details/${id}`}>
+                  {/* {
+                        data && data?(
+                          <img src={data.image} alt="Portfolioooo Images" />
+
+                        ):(
+                          <p>No Image Available</p>
+                        )
+
+
+                      } */}
+
+
+                      <RandomRroject/>
+                    </Link>
                   </div>
-                  <div className="inner">
+                  {/* <div className="inner">
                     <h4>
-                      <a href="/portfolio-details">Digital Analysis</a>
+                      <Link to={`/portfolio-details/${data._id}`}>
+                      {
+                      data && data? (
+                        <h4>{data.title} </h4>
+                      ): (
+                        <h4>No Portolio  Available</h4>
+                      )
+                    }
+                      </Link>
                     </h4>
-                    <span className="category">Technique</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* End Single Portfolio */}
-              {/* Start Single Portfolio */}
-              <div className="col-lg-6 col-md-6 col-12">
-                <div className="related-work text-center mt--30">
-                  <div className="thumb">
-                    <a href="/portfolio-details">
-                      <img
-                        src={relatedImg2}
-                        alt="Portfolio-images"
-                      />
-                    </a>
-                  </div>
-                  <div className="inner">
-                    <h4>
-                      <a href="/portfolio-details">Plan Management</a>
-                    </h4>
-                    <span className="category">PLANNING</span>
-                  </div>
-                </div>
-              </div>
+              
               {/* End Single Portfolio */}
             </div>
           </div>
+        </div>
+
+
+        <div>
+          {/* <RandomRroject/> */}
         </div>
         {/* End Related Work */}
 
@@ -221,5 +329,5 @@ class PortfolioDetails extends Component {
       </React.Fragment>
     );
   }
-}
+
 export default PortfolioDetails;

@@ -6,13 +6,13 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 
-import logo from "../../assets/images/logo/logo.png";
+import logo from "../../assets/images/logo/logo-white.png";
 
 const SocialShare = [
-  { Social: <FaFacebookF />, link: "https://www.facebook.com/" },
-  { Social: <FaLinkedinIn />, link: "https://www.linkedin.com/" },
-  { Social: <FaInstagram />, link: "https://www.instagram.com/" },
-  { Social: <FaTwitter />, link: "https://twitter.com/" },
+  { Social: <FaFacebookF />, link: "https://www.facebook.com/Sharplogicians" },
+  { Social: <FaLinkedinIn />, link: "https://www.linkedin.com/sharplogicians" },
+  { Social: <FaInstagram />, link: "https://www.instagram.com/sharplogicians" },
+  { Social: <FaTwitter />, link: "https://twitter.com/sharplogicians" },
 ];
 
 const FooterTwo = () => {
@@ -46,7 +46,7 @@ const FooterTwo = () => {
           <div className="col-lg-4 col-md-12 col-sm-12 col-12">
             <div className="inner text-lg-right text-center mt_md--20 mt_sm--20">
               <div className="text">
-                <p>Copyright © 2024 Rainbow-Themes. All Rights Reserved.</p>
+                <p>Copyright © 2024 sharplogicians. All Rights Reserved.</p>
               </div>
             </div>
           </div>

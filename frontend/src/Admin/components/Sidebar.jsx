@@ -1,10 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./../styles/Sidebar.css";
-import './../styles/Dashboard.css'
+import './../styles/Dashboard.css';
 
+// Import your icons (assuming you're using react-icons)
+import { FaServicestack, FaBriefcase, FaUsers, FaTeamspeak, FaComment, FaBlog, FaFileContract } from "react-icons/fa";
+import { BsInfoCircle } from "react-icons/bs";
 
-const Sidebar = ({ menus = [], profile }) => { // Add `profile` prop for user details
+const Sidebar = ({ menus = [], profile }) => {
+    const location = useLocation();  // Get current path
+
     return (
         <div className="sidebar">
             {/* Profile Section */}
@@ -23,11 +28,17 @@ const Sidebar = ({ menus = [], profile }) => { // Add `profile` prop for user de
 
             {/* Menu List */}
             <ul>
-                {menus.map((menu, index) => (
-                    <li key={index}>
-                        <Link to={menu.path}>{menu.icon} {menu.name}</Link>
-                    </li>
-                ))}
+                {menus.map((menu, index) => {
+                    const isActive = location.pathname === menu.path; // Check if current path matches the menu path
+
+                    return (
+                        <li key={index} className={isActive ? "active" : ""}> {/* Add active class if it's the current menu */}
+                            <Link to={menu.path} style={{gap:'10px'}}>
+                                {menu.icon} {menu.name}
+                            </Link>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );

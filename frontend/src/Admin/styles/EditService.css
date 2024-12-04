@@ -3,7 +3,6 @@
     margin: 100;
     padding: 0;
     box-sizing: border-box;
-    
 
 }
 body{
@@ -20,7 +19,7 @@ body{
     padding: 30px;
     width: 100%;
     /* max-width: 600px; */
-    margin-top: 165px;
+    margin-top: 200px;
     margin-left: 300px;
     /* padding-right: 100px; */
 }
