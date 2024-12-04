@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Updated CORS configuration
-const allowedOrigins = ["http://localhost:5173", "http://localhost:3000", "http://localhost:5174", "http://localhost:5175"];
+const allowedOrigins = [`${process.env.LOCAL_HOST_NAME}5173`, `${process.env.LOCAL_HOST_NAME}3000`,  `${process.env.LOCAL_HOST_NAME}5175`];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {

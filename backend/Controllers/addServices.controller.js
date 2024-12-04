@@ -47,7 +47,7 @@ export const addService = async (req, res) => {
       ourWorkingProcess,
       content,
       image: [
-        `http://localhost:${process.env.PORT}/${image}`,
+        `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}`,
         
       ],
     });
@@ -181,7 +181,7 @@ export const updateService = async (req, res) => {
 
 
 
-        if (image) service.image = `http://localhost:${process.env.PORT}/uploads/${image}`;
+        if (image) service.image = `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/uploads/${image}`;
 
         await service.save();
         return res.status(200).json({

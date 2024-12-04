@@ -14,7 +14,7 @@ export const addClient = async (req, res) => {
     }
   
     try {
-      const existingClient = await OurClient.findOne({ image: `http://localhost:${process.env.PORT}/${image}` });
+      const existingClient = await OurClient.findOne({ image: `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}` });
       if (existingClient) {
         return res.status(400).json({
           status: false,
@@ -23,7 +23,7 @@ export const addClient = async (req, res) => {
       }
   
       const newClient = new OurClient({
-        image: `http://localhost:${process.env.PORT}/${image}`, 
+        image: `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}`, 
       });
   
       await newClient.save();
@@ -126,7 +126,7 @@ export const updateClient=async(req,res)=>{
                 message: 'Client not found',
               });
         }
-        if(image) ourClients.image=`http://localhost:${process.env.PORT}/${image}`; 
+        if(image) ourClients.image=`${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}`; 
         await ourClients.save();
         return res.status(200).json({
             status: true,

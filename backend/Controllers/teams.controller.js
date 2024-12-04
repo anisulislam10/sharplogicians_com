@@ -19,7 +19,7 @@ export const addTeam = async (req, res) => {
       const ourTeams = new OurTeams({
         name,
         position,
-        image: `http://localhost:${process.env.PORT}/${image}`, 
+        image: `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}`, 
         facebook: facebook, // Save only if provided
         linkedin: linkedin ,
         twitter: twitter ,
@@ -148,7 +148,7 @@ export const updateTeam = async (req, res) => {
     if (name) ourTeam.name = name;
     if (position) ourTeam.position = position;
     if (image) {
-      ourTeam.image = `http://localhost:${process.env.PORT}/${image}`;
+      ourTeam.image = `${process.env.LOCAL_HOST_NAME}${process.env.PORT}/${image}`;
     }
     if (facebook) ourTeam.facebook = facebook;
     if (linkedin) ourTeam.linkedin = linkedin;
